@@ -3,13 +3,12 @@
    ================================================================ */
 window.ML_CONFIG = {
   // Where quote / contact / commercial form submissions are emailed.
-  // Uses FormSubmit.co (free, no account). The FIRST submission sends an
-  // activation email to this inbox — Shana must click "Activate" once.
   leadEmail: "themaidlifestylecompany@gmail.com",
 
-  // Optional: after activation FormSubmit gives a random alias string
-  // (hides the real email from page source). Paste it here if you get one.
-  formAlias: "",
+  // Web3Forms access key (free, no account): get it at https://web3forms.com
+  // by entering the email above — the key is emailed there. Paste it here.
+  // Until a key is set, forms show the "call or text" message instead of sending.
+  web3formsKey: "",
 
   phone: "854-274-4871",
 };

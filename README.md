@@ -20,12 +20,11 @@ Static website (plain HTML/CSS/JS). No server, database, or paid service require
 3. `FACEBOOK_URL` — the real Facebook page link (currently a Facebook search link so it isn't broken).
 
 ## Forms (quote, commercial inquiry, contact)
-Submissions are emailed to **themaidlifestylecompany@gmail.com** through **FormSubmit.co** (free, no account).
-- **One-time activation:** after the site is live, submit any form once. FormSubmit emails that inbox an
-  "Activate Form" link — click it. Until then, submissions won't be delivered.
-- Check the Spam folder for the first few emails and mark them "Not spam".
-- If a send ever fails, visitors see an error with the phone number and email — never a fake success.
-- Optional: FormSubmit can give a random alias to hide the email address; paste it into `formAlias` in `config.js`.
+Submissions are emailed to **themaidlifestylecompany@gmail.com** through **Web3Forms** (free, 250 submissions/month, no account).
+- Get the access key at https://web3forms.com (enter the business email; the key is emailed there).
+- Paste it into `web3formsKey` in `assets/js/config.js`, commit, and Render redeploys automatically.
+- Until a key is set, or if a send fails, visitors see an error with the phone number and email — never a fake success.
+- Check Spam for the first few submission emails and mark them "Not spam".
 
 ## Deploying (free options)
 **Netlify (easiest):** netlify.com → Add new site → *Deploy manually* → drag this whole folder in. Then Domain settings → add your custom domain.
