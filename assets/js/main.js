@@ -58,7 +58,7 @@
   // Earliest selectable date = today
   document.querySelectorAll('input[type="date"]').forEach(function (d) { d.min = new Date().toISOString().slice(0, 10); });
 
-  /* ---- Form submission (FormSubmit.co AJAX → Shana's inbox) ---- */
+  /* ---- Form submission (Web3Forms → Shana's inbox) ---- */
   document.querySelectorAll("form[data-lead]").forEach(function (form) {
     form.addEventListener("submit", function (e) {
       e.preventDefault();
@@ -72,24 +72,24 @@
         if (k === "_honey") return;
         data[k] = data[k] ? data[k] + ", " + v : v;
       });
-      data._subject = form.dataset.subject + " — " + (data["Name"] || data["Contact name"] || "Website");
-      data._template = "table";
-      data._captcha = "false";
-      if (data["Email"]) data._replyto = data["Email"];
+      data.subject = form.dataset.subject + " — " + (data["Name"] || data["Contact name"] || "Website");
+      data.from_name = "Maid Lifestyle Website";
+      if (data["Email"]) data.replyto = data["Email"];
       data["Submitted from"] = location.href;
+      data.access_key = C.web3formsKey;
+      data.botcheck = false;
 
-      var target = C.formAlias || C.leadEmail;
       var btn = form.querySelector('button[type="submit"]'), label = btn.innerHTML;
       btn.disabled = true; btn.textContent = "Sending…";
 
-      fetch("https://formsubmit.co/ajax/" + encodeURIComponent(target), {
+      (C.web3formsKey ? fetch("https://api.web3forms.com/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
         body: JSON.stringify(data)
-      })
+      }) : Promise.reject(new Error("Form key not set")))
         .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
         .then(function (res) {
-          if (!res.ok || String(res.j.success) !== "true") throw new Error(res.j.message || "Submission failed");
+          if (!res.ok || res.j.success !== true) throw new Error(res.j.message || "Submission failed");
           form.classList.add("sent");
           var ok = form.nextElementSibling; if (ok) { ok.setAttribute("tabindex", "-1"); ok.focus(); }
           form.reset();
