@@ -178,6 +178,16 @@ GALLERY = [
  ("tub-detail","bathroom deep","Close-up of a scrubbed bathtub and shower surround"),
  ("fridge-door","kitchen deep","Refrigerator door bins cleaned and cleared"),
  ("half-bath","bathroom","Half bath with pedestal sink, oval mirror and clean floor"),
+ ("kitchen-island-shine","kitchen","Open kitchen with granite island and freshly mopped, gleaming plank floors"),
+ ("living-floor-shine","living","Open living area with plank floors mopped to a high shine"),
+ ("kitchen-cherry","kitchen","Kitchen with cherry cabinets, granite counters and stainless dishwasher, cleaned and ready"),
+ ("hall-tub-shower","bathroom deep","One-piece tub and shower surround scrubbed clean, with handheld shower head"),
+ ("vanity-mirror","bathroom","Bathroom vanity with wiped-down sink, faucet and mirror"),
+ ("half-bath-door","bathroom","Bathroom with clean vanity, toilet and freshly mopped tile floor"),
+ ("toilet-curtain","bathroom","Toilet and tile floor cleaned, with fresh white shower curtain"),
+ ("bedroom-3-windows","bedroom","Bedroom with three windows and freshly vacuumed carpet"),
+ ("loft-carpet","living","Upstairs loft carpet with fresh vacuum lines"),
+ ("laundry-floor","living","Laundry room vinyl floor mopped clean"),
 ]
 
 # ================= PAGES =================
