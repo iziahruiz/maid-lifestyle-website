@@ -15,6 +15,8 @@ FACEBOOK_URL = "https://www.facebook.com/search/top?q=Maid%20Lifestyle%20Cleanin
 BUSINESS = "Maid Lifestyle Cleaning Services"
 OWNER = "Shana"
 TAGLINE = "A Clean Home Is a Happy Home."
+# Recurring-cleaning discounts (percent off each recurring cleaning)
+DISCOUNTS = [("Weekly", 15), ("Biweekly", 10), ("Monthly", 5)]
 # ==================================================================
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -133,6 +135,17 @@ def cta_band(h, p, btn="Request a Free Quote", href="quote.html"):
     return f'''<section class="section"><div class="container"><div class="cta reveal"><div><h2>{h}</h2><p>{p}</p></div>
 <div class="btn-row"><a class="btn btn--gold" href="{href}">{btn}</a><a class="btn btn--ghost-light" href="{TEL}">{I['phone']} {PHONE}</a></div></div></div></section>'''
 
+def savings_section(compact=False):
+    cards = "".join(f'''<article class="save-card reveal{" save-card--best" if i==0 else ""}">{'<span class="badge">Best Value</span>' if i==0 else ""}
+<div class="save-card__pct">{p}%<small>off</small></div><h3>{n} Cleaning</h3><p>Save {p}% on every {n.lower()} cleaning.</p></article>''' for i,(n,p) in enumerate(DISCOUNTS))
+    cls = "section section--mint" if compact else "section"
+    return f'''<section class="{cls}" id="save" style="scroll-margin-top:90px"><div class="container">
+ <div class="head center reveal"><span class="eyebrow">Recurring Discounts</span><h2>The More Often We Clean, <span class="script">the More You Save</span></h2>
+ <p class="lead">Book recurring service and get a discount on every visit.</p></div>
+ <div class="save-grid">{cards}</div>
+ <p class="center reveal" style="margin-top:28px"><a class="btn btn--primary" href="quote.html">Get a Recurring Cleaning Quote</a></p>
+</div></section>'''
+
 # ---------------- SERVICES DATA ----------------
 SERVICES = [
  dict(key="residential", icon="home", title="Residential Cleaning", img="kitchen-gray", accent="double-vanity",
@@ -195,7 +208,7 @@ def home():
     why = [("shield","Dependable & Professional","Show up on time, communicate clearly, and do the job right — every visit."),
            ("eye","Attention to Detail","Baseboards, fixtures, corners and the spots most people miss."),
            ("spark","Quality You Can See","Fresh vacuum lines, gleaming floors, spotless fixtures — see the photos."),
-           ("cal","Flexible Options","One-time, weekly, biweekly or monthly — scheduled around you."),
+           ("cal","Flexible Options","One-time or recurring — save " + ", ".join(f"{p}% {n.lower()}" for n,p in DISCOUNTS) + "."),
            ("building","Residential & Commercial","Homes, apartments, rentals, turnovers and listings."),
            ("heart","Customer-Focused","Your satisfaction matters. We listen and tailor every clean.")]
     whyh = "".join(f'<article class="feature reveal"><div class="icon">{I[i]}</div><h3>{t}</h3><p>{d}</p></article>' for i,t,d in why)
@@ -229,6 +242,7 @@ def home():
  <div class="grid grid-3">{cards}</div>
 </div></section>
 
+{savings_section(compact=True)}
 <section class="section"><div class="container">
  <div class="head center reveal"><span class="eyebrow">Our Work</span><h2>Real Homes. Real Results.</h2>
  <p class="lead">No stock photos — these are spaces Maid Lifestyle has cleaned.</p></div>
@@ -273,8 +287,9 @@ def services():
     house = table("House Cleaning","home",[(f"{n} Bedroom",p) for n,p in zip(range(1,7),["$120","$145","$175","$210","$250","$300"])],[(f"{n} Bedroom",p) for n,p in zip(range(1,7),["$175","$220","$275","$340","$420","$500"])])
     jump = "".join(f'<a class="btn btn--ghost" style="min-height:44px;padding:10px 18px" href="#{s["key"]}">{e(s["title"])}</a>' for s in SERVICES)
     body = page_hero("Our Cleaning Services","Cleaning Services for Every Space","Residential, deep, move-in/move-out, apartment turnover, real estate and trash-out services — all with the same attention to detail.","kitchen-gray") + f'''
-<section class="section" style="padding-bottom:0"><div class="container"><div class="btn-row" style="justify-content:center">{jump}<a class="btn btn--ghost" style="min-height:44px;padding:10px 18px" href="#pricing">Starting Prices</a></div></div></section>
+<section class="section" style="padding-bottom:0"><div class="container"><div class="btn-row" style="justify-content:center">{jump}<a class="btn btn--ghost" style="min-height:44px;padding:10px 18px" href="#save">Recurring Discounts</a><a class="btn btn--ghost" style="min-height:44px;padding:10px 18px" href="#pricing">Starting Prices</a></div></div></section>
 <section class="section" style="padding-top:20px"><div class="container">{rows}</div></section>
+{savings_section()}
 <section class="section section--cream" id="pricing" style="scroll-margin-top:90px"><div class="container">
  <div class="head center reveal"><span class="eyebrow">Starting Prices</span><h2>Simple, Upfront Pricing</h2><p class="lead">Free estimates available. Final pricing is confirmed after we learn about your space.</p></div>
  <div class="grid grid-2">{apt}{house}</div>
@@ -355,7 +370,7 @@ def quote_form():
 {select("Bedrooms","Bedrooms",["Studio","1","2","3","4","5","6+"],req=True)}
 {select("Bathrooms","Bathrooms",["1","1.5","2","2.5","3","3.5","4+"],req=True)}
 {field("Preferred cleaning date","Preferred date","date")}
-{radios("How often?","Frequency",["One-time","Weekly","Biweekly","Monthly"],req=True)}
+{radios("How often?","Frequency",["One-time"]+[f"{n} — {p}% off" for n,p in DISCOUNTS],req=True)}
 <div class="field full"><label for="f-details">Additional details</label><textarea id="f-details" name="Additional details" placeholder="Pets, condition of the home, areas needing extra attention, gate codes, special requests…"></textarea></div>
 </div></fieldset>{HP}
 <div class="form-foot"><small>Free estimate · No obligation. Your information is only used to respond to your request.</small><button class="btn btn--primary" type="submit">Request My Free Quote {I['arrow']}</button></div>
