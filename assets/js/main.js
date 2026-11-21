@@ -104,6 +104,31 @@
 
   /* ---- Gallery filters + lightbox ---- */
   var gal = document.querySelector(".gallery");
+  /* Photos the owner adds through the private uploader live in assets/data/gallery-uploads.json */
+  function addUploads(done) {
+    if (!gal || !window.fetch) return done();
+    fetch("assets/data/gallery-uploads.json", { cache: "no-cache" })
+      .then(function (r) { return r.ok ? r.json() : []; })
+      .then(function (list) {
+        var cats = ["kitchen", "bathroom", "living", "bedroom", "deep", "beforeafter"];
+        (Array.isArray(list) ? list : []).slice().reverse().forEach(function (p) {
+          if (!p || !/^[0-9]{4}-[0-9]{2}-[0-9]{2}-[0-9a-f]{8}$/.test(p.id)) return;
+          var a = document.createElement("a");
+          a.href = "assets/img/uploads/" + p.id + "-lg.jpg";
+          a.dataset.cat = String(p.cat || "").split(" ").filter(function (c) { return cats.indexOf(c) > -1; }).join(" ");
+          var fig = document.createElement("figure"); fig.style.margin = "0";
+          var img = document.createElement("img");
+          img.src = "assets/img/uploads/" + p.id + "-sm.jpg"; img.alt = String(p.alt || "Space cleaned by Maid Lifestyle"); img.loading = "lazy"; img.decoding = "async";
+          var cap = document.createElement("figcaption"); cap.textContent = img.alt;
+          fig.append(img, cap); a.appendChild(fig);
+          gal.insertBefore(a, gal.firstChild);
+        });
+      })
+      .catch(function () {})
+      .then(done);
+  }
+  addUploads(initGallery);
+  function initGallery() {
   if (gal) {
     var items = Array.prototype.slice.call(gal.querySelectorAll("a"));
     var empty = document.getElementById("gallery-empty");
@@ -142,5 +167,6 @@
     var sx = null;
     lb.addEventListener("touchstart", function (e) { sx = e.touches[0].clientX; }, { passive: true });
     lb.addEventListener("touchend", function (e) { if (sx === null) return; var dx = e.changedTouches[0].clientX - sx; if (Math.abs(dx) > 50) show(idx + (dx < 0 ? 1 : -1)); sx = null; });
+  }
   }
 })();
