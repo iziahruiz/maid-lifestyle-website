@@ -39,7 +39,25 @@ Then:
 ## Adding reviews
 Edit `ML_REVIEWS` in `assets/js/config.js` with **real** customer reviews only (with their permission).
 
-## Adding photos
-Put a photo in `assets/img/` as `name-lg.jpg` (~1600px) and `name-sm.jpg` (~700px), then add a line to
-`GALLERY` in `build.py` with its categories (`kitchen bathroom living bedroom deep beforeafter`). Only use
-`beforeafter` for true matching before/after photos of the same job.
+## Adding photos — owner's private upload page
+Shana adds photos herself at the private uploader (a separate free Render web service in `admin-server/`).
+She logs in with a password only she has, picks photos, adds a short description and category, and taps Upload.
+
+How it works:
+- Photos are resized **in her browser** (1600px + 700px JPEGs). This fixes rotation and **strips GPS/EXIF data**,
+  so no client's home location is published.
+- The uploader saves them to `assets/img/uploads/` and lists them in `assets/data/gallery-uploads.json`
+  in this repo (one commit per photo), then calls the public site's Render Deploy Hook so it republishes.
+- The Our Work page loads `gallery-uploads.json` and shows uploads first. She can also remove her uploads there.
+- Security: password + 5-try lockout (15 min), signed HttpOnly/Secure/SameSite=Strict session cookie (12 h),
+  same-origin checks, JPEG-only, 8 MB cap, search engines blocked, captions cleaned, no third parties.
+
+Render environment variables for the uploader (set in the Render dashboard — never commit them):
+| Variable | Value |
+|---|---|
+| `ADMIN_PASSWORD` | Shana's password, 12+ characters |
+| `GITHUB_TOKEN` | Fine-grained token: Repository access = **only** `maid-lifestyle-website`; Permissions → Contents = **Read and write** |
+| `RENDER_DEPLOY_HOOK` | Static site → Settings → Deploy Hook URL |
+
+The original 30 photos are still listed in `GALLERY` in `build.py`. Only use the Before & After category for
+true matching before/after photos of the same job.
